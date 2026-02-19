@@ -32,529 +32,308 @@
     --font2: 'Nunito', sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* scroll is owned by .board-wrap */
-  }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font);
-  }
+  html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); }
 
-  /* ── SINGLE SCROLL CONTAINER ──
-     Both axes scroll here. Header/filters are block children of .board-inner
-     so they naturally inherit its full min-width — background spans the
-     entire scrollable area without any width tricks. position:sticky top
-     works because .board-wrap is the scroll ancestor for both axes. */
-  .board-wrap {
-    width: 100%;
-    height: 100vh;
-    overflow: auto;
-  }
+  .board-wrap { width: 100%; height: 100vh; overflow: auto; }
+  .board-inner { }
 
-  .board-inner {
-    /* No min-width — table now fits viewport */
-  }
-
-  /* ── HEADER ── */
-  .header {
+  .header{
     padding: 18px 24px;
     border-bottom: 2px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 18px;
+    display:flex; align-items:center; gap:18px;
     background: var(--surface);
-    position: sticky;
-    top: 0;
-    left: 0;
-    z-index: 100;
+    position: sticky; top:0; left:0; z-index:100;
     box-shadow: 0 2px 16px rgba(60,40,10,0.07);
   }
-  .header-logo {
-    width: 34px; height: 34px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+  .header-logo{
+    width:34px;height:34px;background:var(--accent);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
   }
-  .header-logo svg { width: 18px; height: 18px; fill: #f2ede4; }
-  .header-title {
-    font-family: var(--font);
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.3px;
-    color: var(--accent);
+  .header-logo svg{width:18px;height:18px;fill:#f2ede4;}
+  .header-title{font-size:18px;font-weight:800;letter-spacing:-0.3px;color:var(--accent);}
+  .header .tabs{display:flex;gap:4px;margin-left:12px;}
+  .tab-btn{
+    background:none;border:1.5px solid var(--border);color:var(--text2);
+    font-size:12px;font-weight:600;padding:5px 15px;border-radius:20px;
+    cursor:pointer;transition:all .15s;
   }
-  .header .tabs { display: flex; gap: 4px; margin-left: 12px; }
-  .tab-btn {
-    background: none;
-    border: 1.5px solid var(--border);
+  .tab-btn.active{background:var(--accent);color:#f2ede4;border-color:var(--accent);}
+  .tab-btn:hover:not(.active){border-color:var(--border2);background:var(--surface2);color:var(--text);}
+  .archive-tab-btn{border-style:dashed !important;}
+
+  .add-btn{
+    position:fixed; right:24px; bottom:24px; z-index:1000;
+    background:var(--accent); border:none; color:#f2ede4;
+    font-size:14px; font-weight:700; padding:14px 24px; border-radius:28px;
+    cursor:pointer; transition:background .15s, box-shadow .15s;
+    display:flex; align-items:center; gap:8px;
+    box-shadow:0 4px 20px rgba(58,102,68,0.35);
+  }
+  .add-btn:hover{background:var(--accent-light);box-shadow:0 6px 24px rgba(58,102,68,0.45);}
+
+  .filters{
+    padding:9px 24px;
+    border-bottom:1px solid var(--border);
+    display:flex; gap:7px; align-items:center; background:var(--bg);
+    flex-wrap:wrap;
+    position: sticky; top:70px; left:0; z-index:90;
+  }
+  .filter-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.8px;text-transform:uppercase;}
+  .filter-chip{
+    background:var(--surface); border:1.5px solid var(--border); color:var(--text2);
+    font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;
+    cursor:pointer;transition:all .12s;
+  }
+  .filter-chip:hover{background:var(--surface2);border-color:var(--border2);}
+  .filter-chip.active{background:var(--accent);color:#f2ede4;border-color:var(--accent);}
+
+  .sort-select-wrap{display:flex;align-items:center;gap:6px;}
+  .sort-select{
+    background:var(--surface); border:1.5px solid var(--border); color:var(--text2);
+    font-size:11px;font-weight:600;padding:4px 28px 4px 12px;border-radius:20px;
+    cursor:pointer; outline:none; appearance:none; -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%239a8e78'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 10px center;
+    transition:all .12s;
+  }
+  .sort-select:hover{border-color:var(--border2);background-color:var(--surface2);}
+  .sort-select:focus{border-color:var(--accent);}
+  .sort-select.active-sort{background-color:#d4e6d8;border-color:var(--accent);color:var(--accent);}
+
+  .divider{width:1px;height:18px;background:var(--border);display:inline-block;margin:0 3px;flex-shrink:0;}
+
+  .search-input{
+    background:var(--surface); border:1.5px solid var(--border); color:var(--text);
+    font-size:12px; padding:5px 14px; border-radius:20px; outline:none;
+    width:210px; transition:border-color .15s;
+  }
+  .search-input:focus{border-color:var(--accent);}
+  .search-input::placeholder{color:var(--text3);font-weight:500;}
+
+  .reset-btn{
+    background:none;border:1.5px solid var(--border2);color:var(--text3);
+    font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;
+    cursor:pointer;transition:all .12s;white-space:nowrap;
+  }
+  .reset-btn:hover{background:var(--p0-bg);border-color:var(--p0);color:var(--p0);}
+
+  .table-wrap{padding:20px 24px 96px;}
+  table{border-collapse:collapse;width:100%;}
+  .col-wrap{white-space:normal;word-break:break-word;}
+
+  thead th{
+    background:var(--surface); color:var(--text3);
+    font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+    padding:10px 14px;text-align:left;
+    border-bottom:2px solid var(--border); border-right:1px solid var(--border);
+    white-space:nowrap;
+    position: sticky; top:108px; z-index:10;
+  }
+  thead th:last-child{border-right:none;}
+
+  tbody tr{border-bottom:1px solid var(--border);transition:background .1s;}
+  tbody tr:hover{background:var(--surface);}
+  tbody td{
+    padding:11px 14px;border-right:1px solid var(--border);
+    vertical-align:top;font-size:13px;
+  }
+  tbody td:last-child{border-right:none;}
+
+  .priority-sel{
+    font-size:11px;font-weight:700;border:none;border-radius:20px;
+    padding:4px 10px;cursor:pointer;outline:none;min-width:52px;
+    appearance:none;-webkit-appearance:none;text-align:center;background-image:none !important;
+  }
+  .p0{background:var(--p0-bg);color:var(--p0);}
+  .p1{background:var(--p1-bg);color:var(--p1);}
+  .p2{background:var(--p2-bg);color:var(--p2);}
+  .p-none{background:var(--surface2);color:var(--text3);}
+
+  .status-sel{
+    font-size:11px;font-weight:600;border:1.5px solid transparent;border-radius:20px;
+    padding:4px 10px;cursor:pointer;outline:none;white-space:nowrap;
+    appearance:none;-webkit-appearance:none;background-image:none !important;
+  }
+  .status-New{background:var(--new-bg);color:var(--new-text);border-color:#b8d8e8;}
+  .status-InProgress{background:var(--inprog-bg);color:var(--inprog-text);border-color:#a8ccb0;}
+  .status-Waiting{background:var(--waiting-bg);color:var(--waiting-text);border-color:#d8c0a0;}
+  .status-Scheduled{background:var(--sched-bg);color:var(--sched-text);border-color:#c8b0d8;}
+  .status-Done{background:var(--done-bg);color:var(--done-text);border-color:#c0b8a8;}
+
+  .waiton-sel{
+    background:var(--surface);border:1.5px solid var(--border);color:var(--text2);
+    font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;
+    cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:none !important;
+  }
+
+  .date-input{
+    background:none;border:none;color:var(--text2);
+    font-family:var(--font2);font-size:11px;font-weight:500;width:108px;
+    cursor:pointer;outline:none;padding:2px 0;
+  }
+  .date-input::-webkit-calendar-picker-indicator{opacity:.35;cursor:pointer;width:12px;}
+  .date-input:focus{color:var(--text);}
+  .date-cell{min-width:100px;}
+
+  .text-edit{
+    background:none;border:none;border-bottom:1.5px dashed transparent;color:var(--text);
+    font-size:13px;font-weight:500;width:100%;outline:none;padding:2px 0;
+    transition:border-color .15s;line-height:1.5;
+  }
+  .text-edit:focus{border-bottom-color:var(--border2);}
+  .text-edit::placeholder{color:var(--text3);font-weight:400;}
+
+  .expand-textarea,.notes-textarea{
+    background:none;border:none;border-bottom:1.5px dashed transparent;outline:none;
+    overflow:hidden;resize:none;line-height:1.55;padding:2px 0;display:block;
+    transition:border-color .15s;
+  }
+  .expand-textarea{color:var(--text);font-size:13px;font-weight:500;width:100%;}
+  .notes-textarea{color:var(--text2);font-family:var(--font2);font-size:12px;font-weight:500;width:180px;min-width:180px;}
+  .expand-textarea:focus,.notes-textarea:focus{border-bottom-color:var(--border2);}
+  .expand-textarea::placeholder,.notes-textarea::placeholder{color:var(--text3);font-weight:400;}
+
+  .account-text{font-weight:700;}
+
+  .del-btn{
+    background:none;border:none;color:var(--text3);cursor:pointer;
+    font-size:17px;padding:0 4px;transition:color .15s;line-height:1;
+  }
+  .del-btn:hover{color:var(--p0);}
+
+  .archived-row{opacity:.85;}
+  .archived-row:hover{background:var(--surface);}
+
+  .priority-badge{
+    display:inline-block;font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;
+  }
+  .tab-badge{
+    font-size:10px;font-weight:700;color:var(--text3);background:var(--surface2);
+    border-radius:10px;padding:2px 8px;
+  }
+  .restore-btn{
+    background:var(--p2-bg);border:1.5px solid var(--p2);color:var(--p2);
+    font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;
+    cursor:pointer;transition:opacity .15s;white-space:nowrap;
+  }
+  .restore-btn:hover{opacity:.75;}
+
+  .empty-state{
+    text-align:center;padding:60px 32px;color:var(--text3);font-size:13px;font-weight:500;
+  }
+
+  .sync-pill{
+    margin-left:auto;
+    font-size:11px;
+    font-weight:700;
+    padding:6px 10px;
+    border-radius:999px;
+    border:1.5px solid var(--border);
+    background: rgba(255,255,255,0.25);
     color: var(--text2);
-    font-family: var(--font);
-    font-size: 12px;
-    font-weight: 600;
-    padding: 5px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.15s;
+    white-space:nowrap;
   }
-  .tab-btn.active { background: var(--accent); color: #f2ede4; border-color: var(--accent); }
-  .tab-btn:hover:not(.active) { border-color: var(--border2); background: var(--surface2); color: var(--text); }
-  /* ── FAB ── */
-  .add-btn {
-    position: fixed;
-    right: 24px;
-    bottom: 24px;
-    z-index: 1000;
-    background: var(--accent);
-    border: none;
-    color: #f2ede4;
-    font-family: var(--font);
-    font-size: 14px;
-    font-weight: 700;
-    padding: 14px 24px;
-    border-radius: 28px;
-    cursor: pointer;
-    transition: background 0.15s, box-shadow 0.15s;
-    display: flex; align-items: center; gap: 8px;
-    box-shadow: 0 4px 20px rgba(58,102,68,0.35);
-  }
-  .add-btn:hover { background: var(--accent-light); box-shadow: 0 6px 24px rgba(58,102,68,0.45); }
+  .sync-ok{border-color:#a8ccb0;color:var(--accent);background:var(--p2-bg);}
+  .sync-bad{border-color:#d8c0a0;color:#7a5020;background:var(--waiting-bg);}
 
-  /* ── FILTER BAR ── */
-  .filters {
-    padding: 9px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    gap: 7px;
-    align-items: center;
-    background: var(--bg);
-    flex-wrap: wrap;
-    position: sticky;
-    top: 70px; /* overridden by setStickyTop() */
-    left: 0;
-    z-index: 90;
-  }
-  .filter-label {
-    font-family: var(--font);
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--text3);
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-  }
-  .filter-chip {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    color: var(--text2);
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.12s;
-  }
-  .filter-chip:hover { background: var(--surface2); border-color: var(--border2); }
-  .filter-chip.active { background: var(--accent); color: #f2ede4; border-color: var(--accent); }
-
-  /* Sort dropdown styled like a chip */
-  .sort-select-wrap {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .sort-select {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    color: var(--text2);
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 28px 4px 12px;
-    border-radius: 20px;
-    cursor: pointer;
-    outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%239a8e78'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    transition: all 0.12s;
-  }
-  .sort-select:hover { border-color: var(--border2); background-color: var(--surface2); }
-  .sort-select:focus { border-color: var(--accent); }
-  .sort-select.active-sort { background-color: #d4e6d8; border-color: var(--accent); color: var(--accent); }
-
-  .divider { width: 1px; height: 18px; background: var(--border); display: inline-block; margin: 0 3px; flex-shrink: 0; }
-
-  .search-input {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 12px;
-    padding: 5px 14px;
-    border-radius: 20px;
-    outline: none;
-    width: 210px;
-    transition: border-color 0.15s;
-  }
-  .search-input:focus { border-color: var(--accent); }
-  .search-input::placeholder { color: var(--text3); font-weight: 500; }
-
-  .reset-btn {
-    background: none;
-    border: 1.5px solid var(--border2);
-    color: var(--text3);
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.12s;
-    white-space: nowrap;
-  }
-  .reset-btn:hover { background: var(--p0-bg); border-color: var(--p0); color: var(--p0); }
-
-  /* ── TABLE ── */
-  /* .board-wrap owns both scroll axes. No overflow here — nested scroll
-     would break position:sticky on thead th. */
-  .table-wrap {
-    padding: 20px 24px 96px;
-  }
-  table { border-collapse: collapse; width: 100%; }
-
-  /* Columns that should wrap to reduce width */
-  .col-wrap { white-space: normal; word-break: break-word; }
-
-  thead th {
-    background: var(--surface);
-    color: var(--text3);
-    font-family: var(--font);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.6px;
-    text-transform: uppercase;
-    padding: 10px 14px;
-    text-align: left;
-    border-bottom: 2px solid var(--border);
-    border-right: 1px solid var(--border);
-    white-space: nowrap;
-    /* Sticks relative to the viewport scroll (body), not a sub-container */
-    position: sticky;
-    top: 108px; /* overridden precisely by setStickyTop() after paint */
-    z-index: 10;
-  }
-  thead th:last-child { border-right: none; }
-
-  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
-  tbody tr:hover { background: var(--surface); }
-  tbody td {
-    padding: 11px 14px;
-    border-right: 1px solid var(--border);
-    vertical-align: top;
-    font-size: 13px;
-    font-family: var(--font);
-  }
-  tbody td:last-child { border-right: none; }
-
-  /* ── PRIORITY ── */
-  .priority-sel {
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 700;
-    border: none;
-    border-radius: 20px;
-    padding: 4px 10px;
-    cursor: pointer;
-    outline: none;
-    min-width: 52px;
-    appearance: none;
-    -webkit-appearance: none;
-    text-align: center;
-    background-image: none !important;
-  }
-  .p0 { background: var(--p0-bg); color: var(--p0); }
-  .p1 { background: var(--p1-bg); color: var(--p1); }
-  .p2 { background: var(--p2-bg); color: var(--p2); }
-  .p-none { background: var(--surface2); color: var(--text3); }
-
-  /* ── STATUS ── */
-  .status-sel {
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 600;
-    border: 1.5px solid transparent;
-    border-radius: 20px;
-    padding: 4px 10px;
-    cursor: pointer;
-    outline: none;
-    white-space: nowrap;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: none !important;
-  }
-  .status-New        { background: var(--new-bg);     color: var(--new-text);     border-color: #b8d8e8; }
-  .status-InProgress { background: var(--inprog-bg);  color: var(--inprog-text);  border-color: #a8ccb0; }
-  .status-Waiting    { background: var(--waiting-bg); color: var(--waiting-text); border-color: #d8c0a0; }
-  .status-Scheduled  { background: var(--sched-bg);   color: var(--sched-text);   border-color: #c8b0d8; }
-  .status-Done       { background: var(--done-bg);    color: var(--done-text);    border-color: #c0b8a8; }
-
-  /* ── WAITING ON ── */
-  .waiton-sel {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    color: var(--text2);
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 20px;
-    cursor: pointer;
-    outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: none !important;
-  }
-
-  /* ── DATE INPUTS ── */
-  .date-input {
-    background: none;
-    border: none;
-    color: var(--text2);
-    font-family: var(--font2);
-    font-size: 11px;
-    font-weight: 500;
-    width: 108px;
-    cursor: pointer;
-    outline: none;
-    padding: 2px 0;
-  }
-  .date-input::-webkit-calendar-picker-indicator { opacity: 0.35; cursor: pointer; width: 12px; }
-  .date-input:focus { color: var(--text); }
-  .date-cell { min-width: 100px; }
-  .date-display {
-    font-family: var(--font2);
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text2);
-  }
-
-  /* ── EDITABLE FIELDS ── */
-  .text-edit {
-    background: none;
-    border: none;
-    border-bottom: 1.5px dashed transparent;
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
-    width: 100%;
-    outline: none;
-    padding: 2px 0;
-    transition: border-color 0.15s;
-    line-height: 1.5;
-  }
-  .text-edit:focus { border-bottom-color: var(--border2); }
-  .text-edit::placeholder { color: var(--text3); font-weight: 400; }
-
-  .expand-textarea {
-    background: none;
-    border: none;
-    border-bottom: 1.5px dashed transparent;
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
-    width: 100%;
-    resize: none;
-    outline: none;
-    overflow: hidden;
-    line-height: 1.55;
-    padding: 2px 0;
-    display: block;
-    transition: border-color 0.15s;
-  }
-  .expand-textarea:focus { border-bottom-color: var(--border2); }
-  .expand-textarea::placeholder { color: var(--text3); font-weight: 400; }
-
-  .notes-textarea {
-    background: none;
-    border: none;
-    border-bottom: 1.5px dashed transparent;
-    color: var(--text2);
-    font-family: var(--font2);
-    font-size: 12px;
-    font-weight: 500;
-    width: 180px;
-    min-width: 180px;
-    resize: none;
-    outline: none;
-    overflow: hidden;
-    line-height: 1.55;
-    padding: 2px 0;
-    display: block;
-    transition: border-color 0.15s;
-  }
-  .notes-textarea:focus { border-bottom-color: var(--border2); }
-  .notes-textarea::placeholder { color: var(--text3); font-weight: 400; }
-
-  .account-text { font-weight: 700; }
-
-  /* ── MISC ── */
-  .del-btn {
-    background: none; border: none; color: var(--text3); cursor: pointer;
-    font-size: 17px; padding: 0 4px; transition: color 0.15s; line-height: 1;
-  }
-  .del-btn:hover { color: var(--p0); }
-
-  /* ── ARCHIVE ── */
-  .archive-tab-btn { border-style: dashed !important; }
-  .archived-row { opacity: 0.85; }
-  .archived-row:hover { background: var(--surface); }
-
-  .priority-badge {
-    display: inline-block;
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 20px;
-    padding: 3px 10px;
-  }
-  .tab-badge {
-    font-family: var(--font);
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--text3);
-    background: var(--surface2);
-    border-radius: 10px;
-    padding: 2px 8px;
-  }
-  .restore-btn {
-    background: var(--p2-bg); border: 1.5px solid var(--p2); color: var(--p2);
-    font-family: var(--font); font-size: 11px; font-weight: 700;
-    padding: 4px 10px; border-radius: 20px; cursor: pointer; transition: opacity 0.15s;
-    white-space: nowrap;
-  }
-  .restore-btn:hover { opacity: 0.75; }
-  .perm-del-btn {
-    background: var(--p0-bg); border: 1.5px solid var(--p0); color: var(--p0);
-    font-family: var(--font); font-size: 11px; font-weight: 700;
-    padding: 4px 10px; border-radius: 20px; cursor: pointer; transition: opacity 0.15s;
-    white-space: nowrap;
-  }
-  .perm-del-btn:hover { opacity: 0.75; }
-
-  .section-row td {
-    background: var(--surface2);
-    color: var(--text3);
-    font-family: var(--font);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    padding: 8px 14px;
-    border-top: 3px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    /* Never clip or overlap — let the row take its natural height */
-    overflow: visible;
-    white-space: nowrap;
-  }
-
-  .empty-state {
-    text-align: center; padding: 60px 32px;
-    color: var(--text3); font-family: var(--font); font-size: 13px; font-weight: 500;
-  }
-
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 </style>
 </head>
 <body>
 
 <div class="board-wrap"><div class="board-inner">
 
-<div class="header">
-  <div class="header-logo">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-    </svg>
+  <div class="header">
+    <div class="header-logo">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+    </div>
+    <span class="header-title">Titus Tasks</span>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('external')">External</button>
+      <button class="tab-btn" onclick="switchTab('internal')">Internal</button>
+      <button class="tab-btn archive-tab-btn" onclick="switchTab('archive')">Archive</button>
+    </div>
+
+    <div id="sync-pill" class="sync-pill">Sync: loading…</div>
   </div>
-  <span class="header-title">Titus Tasks</span>
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('external')">External</button>
-    <button class="tab-btn" onclick="switchTab('internal')">Internal</button>
-    <button class="tab-btn archive-tab-btn" onclick="switchTab('archive')">Archive</button>
+
+  <div class="filters">
+    <input class="search-input" type="text" id="search-input" placeholder="🔍  Search tasks…" oninput="handleSearch(this.value)" />
+    <button class="reset-btn" onclick="resetFilters()">✕ Reset</button>
+
+    <span class="divider"></span>
+
+    <span class="filter-label">Priority</span>
+    <button class="filter-chip active" onclick="setFilter('all', this)">All</button>
+    <button class="filter-chip" onclick="setFilter('P0', this)">P0</button>
+    <button class="filter-chip" onclick="setFilter('P1', this)">P1</button>
+    <button class="filter-chip" onclick="setFilter('P2', this)">P2</button>
+
+    <span class="divider"></span>
+
+    <span class="filter-label">Status</span>
+    <button class="filter-chip" onclick="setStatusFilter('New', this)">New</button>
+    <button class="filter-chip" onclick="setStatusFilter('In Progress', this)">In Progress</button>
+    <button class="filter-chip" onclick="setStatusFilter('Waiting', this)">Waiting</button>
+    <button class="filter-chip" onclick="setStatusFilter('Done', this)">Done</button>
+
+    <span class="divider"></span>
+
+    <span class="filter-label">Sort</span>
+    <div class="sort-select-wrap">
+      <select class="sort-select" id="sort-select" onchange="handleSortChange(this.value)">
+        <option value="priority">By Priority</option>
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+      </select>
+    </div>
   </div>
-</div>
 
-<div class="filters">
-  <input class="search-input" type="text" id="search-input" placeholder="🔍  Search tasks…" oninput="handleSearch(this.value)" />
-  <button class="reset-btn" onclick="resetFilters()">✕ Reset</button>
-
-  <span class="divider"></span>
-
-  <span class="filter-label">Priority</span>
-  <button class="filter-chip active" onclick="setFilter('all', this)">All</button>
-  <button class="filter-chip" onclick="setFilter('P0', this)">P0</button>
-  <button class="filter-chip" onclick="setFilter('P1', this)">P1</button>
-  <button class="filter-chip" onclick="setFilter('P2', this)">P2</button>
-
-  <span class="divider"></span>
-
-  <span class="filter-label">Status</span>
-  <button class="filter-chip" onclick="setStatusFilter('New', this)">New</button>
-  <button class="filter-chip" onclick="setStatusFilter('In Progress', this)">In Progress</button>
-  <button class="filter-chip" onclick="setStatusFilter('Waiting', this)">Waiting</button>
-  <button class="filter-chip" onclick="setStatusFilter('Done', this)">Done</button>
-
-  <span class="divider"></span>
-
-  <span class="filter-label">Sort</span>
-  <div class="sort-select-wrap">
-    <select class="sort-select" id="sort-select" onchange="handleSortChange(this.value)">
-      <option value="priority">By Priority</option>
-      <option value="newest">Newest First</option>
-      <option value="oldest">Oldest First</option>
-    </select>
+  <div class="table-wrap">
+    <div id="board-container"></div>
   </div>
-</div>
 
-<div class="table-wrap">
-  <div id="board-container"></div>
-</div><!-- /.table-wrap -->
-
-</div></div><!-- /.board-inner /.board-wrap -->
+</div></div>
 
 <button class="add-btn" onclick="addRow()">
   <span style="font-size:18px;line-height:1">+</span> Add Task
 </button>
 
 <script>
-// ─── DATA ────────────────────────────────────────────────────────────────────
+/**
+ * ================================
+ *  APPS SCRIPT SYNC CONFIG
+ * ================================
+ * This MUST be your deployed web-app URL that responds to:
+ *   GET  ?action=load   -> returns JSON { externalData, internalData, externalArchive, internalArchive }
+ *   POST {action:"save", ...same payload...} -> returns JSON { ok:true }
+ */
+const API_BASE = "https://script.googleusercontent.com/macros/echo?user_content_key=AY5xjrSICHixDMmAHuC0MF2tgWEA9PgNGll92ccNyLZJKKrH-05nqgxOh7q4_4dBXECgWlqHtjaZD2qPeuTrqjNPv3ZfroH0cBg-qUHQ9WhP3Q7GKTVsPV9wriz4QLF24OaFRuebdAOfPM6ttAYQ7HKufsjXmbiaxWhqjuL7r4EPkGaLidRdzJO-yi222pylmKy7mUCoHBjTQ_Zxy9A_gtNxfEKMGebCaOIENuecGRc8OQETuLyYaUEQL0tKu3TLzmjcvlHw33-wD3djHTUMT_cx7g0Kt3w_Btp7iGva63xU&lib=MUWhHxGFvT1i7S6O1q_CEXSbQcmkD949a";
 
-const externalData = [
-  { id:1,  priority:'P0', account:'Tim Slusher',    category:'TMC',     dateCreated:'1/20/2026', issue:'Registration of A2P 10DLC',                                            status:'In Progress', waitingOn:'Vendor',   retailerSent:'2/11/2026', retailerReply:'2/11/2026', techSent:'',          techReply:'',          vendorSent:'2/19/2026', vendorReply:'2/15/2026', nextAction:'Twilio provides exact reason why opt-in is the issue',              notes:'' },
-  { id:2,  priority:'P0', account:'Spivak',         category:'TMC',     dateCreated:'1/29/2026', issue:'Starting Campaign',                                                     status:'In Progress', waitingOn:'Tech',     retailerSent:'2/17/2026', retailerReply:'2/17/2026', techSent:'2/19/2026', techReply:'2/18/2026', vendorSent:'2/19/2026', vendorReply:'2/19/2026', nextAction:'Tech provides screen recording and details to Twilio',             notes:'' },
-  { id:3,  priority:'P2', account:'Snowden',        category:'Website', dateCreated:'2/18/2026', issue:'Mobile Navigation',                                                     status:'In Progress', waitingOn:'Me',       retailerSent:'',          retailerReply:'2/18/2026', techSent:'',          techReply:'',          vendorSent:'',          vendorReply:'',          nextAction:'Call Snowden and talk about billing and website',                  notes:'' },
-  { id:4,  priority:'P2', account:'Tonya',          category:'TMC',     dateCreated:'',          issue:'Duplicate Message Send',                                                status:'Done',        waitingOn:'Me',       retailerSent:'2/17/2026', retailerReply:'2/13/2026', techSent:'',          techReply:'',          vendorSent:'',          vendorReply:'',          nextAction:'Call Tonya and tell her about the changes and magnitude affected', notes:'' },
-  { id:5,  priority:'P1', account:'Melissa Bright', category:'TMC',     dateCreated:'2/18/2026', issue:'Items not selling at low quantity / receipts not automatically sending', status:'In Progress', waitingOn:'Retailer', retailerSent:'2/19/2026', retailerReply:'2/18/2026', techSent:'2/18/2026', techReply:'',          vendorSent:'',          vendorReply:'',          nextAction:'Get additional information from Melissa to relay back to Tech',    notes:'' },
-];
+const LOCAL_KEY = "titus_taskboard_state_v1";
 
-const internalData = [
-  { id:1,  priority:'P1', account:'',        category:'Sales',     dateCreated:'2/18/2026', issue:'New Retailer Funnel For AGTA', status:'New',         waitingOn:'Nobody', retailerSent:'', retailerReply:'', techSent:'', techReply:'', vendorSent:'', vendorReply:'', nextAction:'', notes:'Need to meet with Rohan and Anish Tuesday after RJO' },
-  { id:2,  priority:'P2', account:'',        category:'Marketing', dateCreated:'2/17/2026', issue:'Create Graphics',              status:'New',         waitingOn:'Nobody', retailerSent:'', retailerReply:'', techSent:'', techReply:'', vendorSent:'', vendorReply:'', nextAction:'', notes:'Create Graphics to promote custom process for social media' },
-  { id:3,  priority:'P0', account:'Nyusoft', category:'Dev',       dateCreated:'2/19/2026', issue:'Website Changes',              status:'In Progress', waitingOn:'Tech',   retailerSent:'', retailerReply:'', techSent:'', techReply:'', vendorSent:'', vendorReply:'', nextAction:'', notes:'' },
-  { id:4,  priority:'P0', account:'Prerak',  category:'Dev',       dateCreated:'2/19/2026', issue:'Website Changes',              status:'In Progress', waitingOn:'Tech',   retailerSent:'', retailerReply:'', techSent:'', techReply:'', vendorSent:'', vendorReply:'', nextAction:'', notes:'' },
-  { id:5,  priority:'P0', account:'',        category:'Marketing', dateCreated:'2/19/2026', issue:'Tradeshow Emails',             status:'In Progress', waitingOn:'Me',     retailerSent:'', retailerReply:'', techSent:'', techReply:'', vendorSent:'', vendorReply:'', nextAction:'', notes:'Revision 3 feedback' },
-  { id:6,  priority:'P2', account:'',        category:'Sales',     dateCreated:'',          issue:'Update Funnel',                status:'New',         waitingOn:'Nobody', retailerSent:'', retailerReply:'', techSent:'', techReply:'', vendorSent:'', vendorReply:'', nextAction:'', notes:'' },
-];
+/** UI sync pill */
+function setSync(status, text) {
+  const pill = document.getElementById("sync-pill");
+  if (!pill) return;
+  pill.classList.remove("sync-ok","sync-bad");
+  if (status === "ok") pill.classList.add("sync-ok");
+  if (status === "bad") pill.classList.add("sync-bad");
+  pill.textContent = text;
+}
+
+function safeJsonParse(s) { try { return JSON.parse(s); } catch { return null; } }
+
+// ─── DATA (will be overwritten by load) ──────────────────────────────────────
+const externalData = [];
+const internalData = [];
+const externalArchive = [];
+const internalArchive = [];
 
 let currentTab     = 'external';
 let filterPriority = 'all';
@@ -563,16 +342,92 @@ let searchQuery    = '';
 let sortMode       = 'priority'; // 'priority' | 'newest' | 'oldest'
 let nextId         = 100;
 
-const externalArchive = [];
-const internalArchive = [];
+// ─── SYNC: LOAD / SAVE ───────────────────────────────────────────────────────
+function getState() {
+  return { externalData, internalData, externalArchive, internalArchive, nextId };
+}
 
+function applyState(state) {
+  // Clear & refill arrays in-place (so references remain valid)
+  function refill(target, src) {
+    target.length = 0;
+    (src || []).forEach(x => target.push(x));
+  }
+  refill(externalData, state.externalData);
+  refill(internalData, state.internalData);
+  refill(externalArchive, state.externalArchive);
+  refill(internalArchive, state.internalArchive);
+  nextId = Number(state.nextId || nextId || 100);
+
+  // Ensure IDs remain unique if someone pasted rows without nextId updated
+  const all = [...externalData, ...internalData, ...externalArchive, ...internalArchive];
+  const maxId = all.reduce((m, r) => Math.max(m, Number(r.id || 0)), 0);
+  if (maxId >= nextId) nextId = maxId + 1;
+}
+
+async function apiLoad() {
+  setSync("", "Sync: loading…");
+  // 1) Try server
+  try {
+    const res = await fetch(API_BASE + "&action=load", { method: "GET" });
+    const txt = await res.text();
+    const data = safeJsonParse(txt);
+    if (!res.ok || !data) throw new Error("Bad response");
+    applyState(data);
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(getState()));
+    setSync("ok", "Sync: live");
+    return;
+  } catch (e) {
+    // 2) Fallback to localStorage
+    const cached = safeJsonParse(localStorage.getItem(LOCAL_KEY) || "");
+    if (cached) {
+      applyState(cached);
+      setSync("bad", "Sync: offline (cached)");
+      return;
+    }
+    setSync("bad", "Sync: offline");
+  }
+}
+
+let saveTimer = null;
+let savingNow = false;
+
+function scheduleSave() {
+  // debounce saves so typing doesn’t spam the server
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(apiSave, 700);
+}
+
+async function apiSave() {
+  if (savingNow) return;
+  savingNow = true;
+  setSync("", "Sync: saving…");
+  const payload = { action: "save", ...getState() };
+
+  // Always update local cache first
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(getState()));
+
+  try {
+    const res = await fetch(API_BASE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const txt = await res.text();
+    const data = safeJsonParse(txt);
+    if (!res.ok || !data || data.ok !== true) throw new Error("Save failed");
+    setSync("ok", "Sync: saved");
+  } catch (e) {
+    setSync("bad", "Sync: offline (saved locally)");
+  } finally {
+    savingNow = false;
+  }
+}
+
+// ─── HELPERS ────────────────────────────────────────────────────────────────
 function getData()    { return currentTab === 'external' ? externalData : internalData; }
-function getArchive() { return currentTab === 'archive' ? [...externalArchive, ...internalArchive]
-                              : currentTab === 'external' ? externalArchive : internalArchive; }
-
 function parseDate(s) {
   if (!s) return 0;
-  // Handles YYYY-MM-DD (new format) and M/D/YYYY (legacy)
   const iso = s.includes('-') ? s : (() => {
     const p = s.split('/');
     return p.length === 3 ? `${p[2]}-${p[0].padStart(2,'0')}-${p[1].padStart(2,'0')}` : '';
@@ -580,33 +435,59 @@ function parseDate(s) {
   const d = new Date(iso);
   return isNaN(d) ? 0 : d.getTime();
 }
+function statusClass(s)   { return 'status-'+String(s||'').replace(/\s+/g,''); }
+function priorityClass(p) { return p ? p.toLowerCase() : 'p-none'; }
 
+function dateVal(s) {
+  if (!s) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  const p = String(s).split('/');
+  if (p.length===3) return `${p[2]}-${p[0].padStart(2,'0')}-${p[1].padStart(2,'0')}`;
+  return '';
+}
+function formatDate(s) {
+  if (!s) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    const [y,m,d] = s.split('-');
+    return `${+m}/${+d}/${y}`;
+  }
+  return s;
+}
+function esc(s) {
+  return String(s||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function autoExpand(el) { el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+function autoExpandAll() {
+  document.querySelectorAll('.expand-textarea,.notes-textarea').forEach(el => {
+    el.style.height='auto'; el.style.height=el.scrollHeight+'px';
+  });
+}
+
+// ─── FILTERS ────────────────────────────────────────────────────────────────
 function getFiltered() {
   let rows = getData().filter(r => {
     if (filterPriority !== 'all' && r.priority !== filterPriority) return false;
     if (filterStatus   !== 'all' && r.status   !== filterStatus)   return false;
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      if (!( r.issue.toLowerCase().includes(q)
-          || (r.account||'').toLowerCase().includes(q)
-          || r.category.toLowerCase().includes(q)
-          || r.notes.toLowerCase().includes(q) )) return false;
+      const hay = [
+        r.issue, r.account, r.category, r.notes, r.nextAction
+      ].map(x => String(x||'').toLowerCase()).join(' | ');
+      if (!hay.includes(q)) return false;
     }
     return true;
   });
-
-  // Sorting is applied per priority group in render(), not here
   return rows;
 }
-
-// ─── UI HELPERS ──────────────────────────────────────────────────────────────
 
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   const idx = tab === 'external' ? 0 : tab === 'internal' ? 1 : 2;
   document.querySelectorAll('.tab-btn')[idx].classList.add('active');
-  // Hide filters + FAB in archive view
   document.querySelector('.filters').style.display = tab === 'archive' ? 'none' : '';
   document.querySelector('.add-btn').style.display  = tab === 'archive' ? 'none' : '';
   render();
@@ -641,7 +522,7 @@ function resetFilters() {
   document.getElementById('sort-select').value  = 'priority';
   document.getElementById('sort-select').classList.remove('active-sort');
   document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  document.querySelectorAll('.filter-chip')[0].classList.add('active'); // "All" priority chip
+  document.querySelectorAll('.filter-chip')[0].classList.add('active');
   render();
 }
 
@@ -652,86 +533,69 @@ function handleSortChange(val) {
   render();
 }
 
+// ─── CRUD ───────────────────────────────────────────────────────────────────
 function addRow() {
   const t = new Date();
   const dc = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
-  getData().unshift({ id:nextId++, priority:'', account:'', category:'', dateCreated:dc, issue:'New Task', status:'New', waitingOn:'Nobody', retailerSent:'', techSent:'', vendorSent:'', nextAction:'', notes:'' });
+  getData().unshift({
+    id: nextId++,
+    priority:'', account:'', category:'',
+    dateCreated: dc,
+    issue:'New Task',
+    status:'New',
+    waitingOn:'Nobody',
+    retailerSent:'', techSent:'', vendorSent:'',
+    nextAction:'', notes:''
+  });
+  scheduleSave();
   render();
 }
 
 function archiveRow(id) {
-  const data = getData(), idx = data.findIndex(r => r.id === id);
+  const data = getData();
+  const idx = data.findIndex(r => Number(r.id) === Number(id));
   if (idx === -1) return;
   const [row] = data.splice(idx, 1);
-  row._sourceTab = currentTab; // remember which tab it came from
+  row._sourceTab = currentTab;
   (currentTab === 'external' ? externalArchive : internalArchive).unshift(row);
+  scheduleSave();
   render();
 }
 
 function restoreRow(id) {
-  // Search both archive arrays
   for (const arr of [externalArchive, internalArchive]) {
-    const idx = arr.findIndex(r => r.id === id);
+    const idx = arr.findIndex(r => Number(r.id) === Number(id));
     if (idx !== -1) {
       const [row] = arr.splice(idx, 1);
       const target = row._sourceTab === 'internal' ? internalData : externalData;
       target.unshift(row);
+      scheduleSave();
       render();
       return;
     }
   }
 }
 
-function permanentDelete(id) {
-  for (const arr of [externalArchive, internalArchive]) {
-    const idx = arr.findIndex(r => r.id === id);
-    if (idx !== -1) { arr.splice(idx, 1); render(); return; }
-  }
-}
-
 function updateField(id, field, value) {
-  const row = getData().find(r => r.id===id);
-  if (row) row[field] = value;
-  if (field==='priority'||field==='status') render();
+  const row = getData().find(r => Number(r.id) === Number(id));
+  if (!row) return;
+  row[field] = value;
+  scheduleSave();
+  // re-render only when needed
+  if (field === 'priority' || field === 'status') render();
 }
 
-// ─── RENDER HELPERS ──────────────────────────────────────────────────────────
-
-function statusClass(s)   { return 'status-'+s.replace(/\s+/g,''); }
-function priorityClass(p) { return p ? p.toLowerCase() : 'p-none'; }
-
-function dateVal(s) {
-  if (!s) return '';
-  // Already YYYY-MM-DD (from date picker) — pass through
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  // Legacy M/D/YYYY — convert
-  const p = s.split('/');
-  if (p.length===3) return `${p[2]}-${p[0].padStart(2,'0')}-${p[1].padStart(2,'0')}`;
-  return '';
+// ─── RENDER ────────────────────────────────────────────────────────────────
+function setStickyTop() {
+  const header  = document.querySelector('.header');
+  const filters = document.querySelector('.filters');
+  if (!header || !filters) return;
+  const headerH  = header.offsetHeight;
+  filters.style.top = headerH + 'px';
+  const filtersH = filters.offsetHeight;
+  const theadTop = headerH + filtersH;
+  document.querySelectorAll('thead th').forEach(th => th.style.top = theadTop + 'px');
 }
-
-// Format any stored date (YYYY-MM-DD or M/D/YYYY) → M/D/YYYY for display
-function formatDate(s) {
-  if (!s) return '';
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
-    const [y,m,d] = s.split('-');
-    return `${+m}/${+d}/${y}`;
-  }
-  return s; // already M/D/YYYY
-}
-
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function autoExpand(el) { el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
-function autoExpandAll() {
-  document.querySelectorAll('.expand-textarea,.notes-textarea').forEach(el => {
-    el.style.height='auto'; el.style.height=el.scrollHeight+'px';
-  });
-}
-
-// ─── RENDER ROW ──────────────────────────────────────────────────────────────
 
 function renderRow(r) {
   const pClass = priorityClass(r.priority);
@@ -777,25 +641,9 @@ function renderRow(r) {
   </tr>`;
 }
 
-// ─── MAIN RENDER ─────────────────────────────────────────────────────────────
-
-function setStickyTop() {
-  const header  = document.querySelector('.header');
-  const filters = document.querySelector('.filters');
-  if (!header || !filters) return;
-  const headerH  = header.offsetHeight;
-  // Pin filters bar right below header
-  filters.style.top = headerH + 'px';
-  // Pin thead right below header + filters
-  const filtersH = filters.offsetHeight;
-  const theadTop = headerH + filtersH;
-  document.querySelectorAll('thead th').forEach(th => th.style.top = theadTop + 'px');
-}
-
 function render() {
   const container = document.getElementById('board-container');
 
-  // ── ARCHIVE VIEW ──────────────────────────────────────────────────────────
   if (currentTab === 'archive') {
     const archived = [...externalArchive, ...internalArchive];
     if (archived.length === 0) {
@@ -803,16 +651,18 @@ function render() {
       requestAnimationFrame(setStickyTop);
       return;
     }
+
     let html = `<table><thead><tr>
       <th>Tab</th><th>Priority</th><th>Account</th><th>Category</th>
       <th>Status</th><th>Next Action</th><th>Date Created</th><th>Notes</th>
       <th>Restore</th>
     </tr></thead><tbody>`;
+
     for (const r of archived) {
       const pClass = priorityClass(r.priority);
       html += `<tr data-id="${r.id}" class="archived-row">
         <td><span class="tab-badge">${r._sourceTab === 'internal' ? 'Int' : 'Ext'}</span></td>
-        <td>${r.priority ? `<span class="priority-badge ${pClass}">${r.priority}</span>` : '<span class="priority-badge p-none">—</span>'}</td>
+        <td>${r.priority ? `<span class="priority-badge ${pClass}">${esc(r.priority)}</span>` : '<span class="priority-badge p-none">—</span>'}</td>
         <td class="col-wrap">${esc(r.account||'')}</td>
         <td class="col-wrap">${esc(r.category||'')}</td>
         <td>${esc(r.status||'')}</td>
@@ -828,10 +678,8 @@ function render() {
     return;
   }
 
-  // ── NORMAL VIEW ───────────────────────────────────────────────────────────
-  const rows      = getFiltered();
-  const isExt     = currentTab === 'external';
-  const colSpan   = isExt ? 12 : 11;
+  const rows  = getFiltered();
+  const isExt = currentTab === 'external';
 
   if (rows.length === 0) {
     container.innerHTML = `<div class="empty-state">No tasks match the current filters.</div>`;
@@ -854,20 +702,13 @@ function render() {
   </tr></thead><tbody>`;
 
   const priOrder = { '': -1, P0:0, P1:1, P2:2 };
-
   const grouped = [...rows].sort((a,b) => {
     if (sortMode === 'newest') return parseDate(b.dateCreated) - parseDate(a.dateCreated);
     if (sortMode === 'oldest') return parseDate(a.dateCreated) - parseDate(b.dateCreated);
-    // default: sort by priority
     return (priOrder[a.priority] ?? 3) - (priOrder[b.priority] ?? 3);
   });
 
-  let lastP = null;
-  for (const r of grouped) {
-    const pKey = r.priority || '';
-    if (pKey !== lastP) lastP = pKey;
-    html += renderRow(r);
-  }
+  for (const r of grouped) html += renderRow(r);
 
   html += `</tbody></table>`;
   container.innerHTML = html;
@@ -877,9 +718,13 @@ function render() {
   });
 }
 
-render();
-// Run once immediately so sticky offsets are correct before any scroll
-setStickyTop();
+// ─── BOOT ───────────────────────────────────────────────────────────────────
+(async function init() {
+  await apiLoad();
+  render();
+  setStickyTop();
+})();
+
 window.addEventListener('resize', setStickyTop);
 </script>
 </body>

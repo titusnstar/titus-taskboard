@@ -5,25 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Titus Taskboard</title>
   <style>
-    body { font-family: system-ui, Arial; padding: 40px; max-width: 800px; margin: 0 auto; }
+    body { font-family: system-ui, Arial; padding: 40px; max-width: 820px; margin: 0 auto; line-height: 1.4; }
+    .card { border: 1px solid #ddd; border-radius: 14px; padding: 20px; }
     a.button { display:inline-block; padding:12px 18px; border:1px solid #333; border-radius:10px; text-decoration:none; }
     code { background:#f4f4f4; padding:2px 6px; border-radius:6px; }
+    .muted { color:#666; font-size: 14px; }
   </style>
 </head>
 <body>
   <h1>Titus Taskboard</h1>
-  <p>This page opens the live taskboard hosted on Google Apps Script.</p>
 
-  <p><b>Live URL:</b> <code>https://script.google.com/macros/s/AKfycbxc0bEeea6SVh4Jm1hP3duudVsdKlFoU-LMAj1QcYtW9IGtRnsFsV_QlBcAd_Vn6S0vpg/exec</code></p>
+  <div class="card">
+    <p class="muted">
+      This link opens the live taskboard hosted on Google Apps Script (the version that updates automatically from Google Sheets).
+    </p>
 
-  <p>
-    <a class="button" href="https://script.google.com/macros/s/AKfycbxc0bEeea6SVh4Jm1hP3duudVsdKlFoU-LMAj1QcYtW9IGtRnsFsV_QlBcAd_Vn6S0vpg/exec" target="_blank" rel="noopener">
-      Open Live Taskboard →
-    </a>
-  </p>
+    <p><b>Live URL:</b> <code>https://script.google.com/macros/s/AKfycby-ntojF6iYdwWBHXYE12cEV520rQYQ7_xEpCAi1FyhTc8Q9aCUbLE1CaWre_tGueF0zw/exec</code></p>
 
-  <p style="margin-top: 30px; color:#666;">
-    (Embedding in an iframe often fails due to Google security headers, so we use a direct link.)
-  </p>
+    <p>
+      <a class="button" href="https://script.google.com/macros/s/AKfycby-ntojF6iYdwWBHXYE12cEV520rQYQ7_xEpCAi1FyhTc8Q9aCUbLE1CaWre_tGueF0zw/exec" target="_blank" rel="noopener">
+        Open Live Taskboard →
+      </a>
+    </p>
+
+    <p class="muted">
+      If you get a 404 here, your GitHub Pages repo is missing a file named <b>index.html</b> at the correct location.
+    </p>
+  </div>
 </body>
 </html>

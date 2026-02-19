@@ -5,44 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Titus Taskboard</title>
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 0; padding: 24px; }
-    .card { max-width: 900px; margin: 0 auto; border: 1px solid #ddd; border-radius: 12px; padding: 18px; }
-    .btn { display: inline-block; padding: 10px 14px; border-radius: 10px; border: 1px solid #333; text-decoration: none; }
-    iframe { width: 100%; height: 80vh; border: 1px solid #ddd; border-radius: 12px; margin-top: 16px; }
-    code { background: #f6f6f6; padding: 2px 6px; border-radius: 6px; }
+    body { font-family: system-ui, Arial; padding: 40px; max-width: 800px; margin: 0 auto; }
+    a.button { display:inline-block; padding:12px 18px; border:1px solid #333; border-radius:10px; text-decoration:none; }
+    code { background:#f4f4f4; padding:2px 6px; border-radius:6px; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>Titus Taskboard</h2>
-    <p>
-      This GitHub page <strong>cannot</strong> directly call Google Apps Script APIs because of browser CORS rules.
-      The live app is hosted on Apps Script (same origin as the API), which avoids CORS entirely.
-    </p>
+  <h1>Titus Taskboard</h1>
+  <p>This page opens the live taskboard hosted on Google Apps Script.</p>
 
-    <p>
-      <strong>Step 1:</strong> Paste your Apps Script web app URL below:
-      <br/>
-      <code id="app-url">https://script.google.com/macros/s/AKfycbxc0bEeea6SVh4Jm1hP3duudVsdKlFoU-LMAj1QcYtW9IGtRnsFsV_QlBcAd_Vn6S0vpg/exec</code>
-    </p>
+  <p><b>Live URL:</b> <code>https://script.google.com/macros/s/AKfycbxc0bEeea6SVh4Jm1hP3duudVsdKlFoU-LMAj1QcYtW9IGtRnsFsV_QlBcAd_Vn6S0vpg/exec</code></p>
 
-    <p>
-      <a class="btn" id="open-btn" href="#" target="_blank">Open Live Taskboard</a>
-    </p>
+  <p>
+    <a class="button" href="https://script.google.com/macros/s/AKfycbxc0bEeea6SVh4Jm1hP3duudVsdKlFoU-LMAj1QcYtW9IGtRnsFsV_QlBcAd_Vn6S0vpg/exec" target="_blank" rel="noopener">
+      Open Live Taskboard →
+    </a>
+  </p>
 
-    <p><strong>Optional:</strong> Embedded view (if your browser allows it):</p>
-    <iframe id="frame" src=""></iframe>
-  </div>
-
-  <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxc0bEeea6SVh4Jm1hP3duudVsdKlFoU-LMAj1QcYtW9IGtRnsFsV_QlBcAd_Vn6S0vpg/exec"; // <-- fill this
-
-    document.getElementById("app-url").textContent = WEB_APP_URL;
-    const btn = document.getElementById("open-btn");
-    btn.href = WEB_APP_URL;
-
-    // Try embedding
-    document.getElementById("frame").src = WEB_APP_URL;
-  </script>
+  <p style="margin-top: 30px; color:#666;">
+    (Embedding in an iframe often fails due to Google security headers, so we use a direct link.)
+  </p>
 </body>
 </html>
